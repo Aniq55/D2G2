@@ -11,16 +11,15 @@ This repository maintains the implementation of D2G2 (SDM 21), a generic framewo
 2. Add datasets consisting of adjacency matrix and feature matrix with time dimension to dataset folder.   
 3. Run the code.  
       * model.py: the D2G2 model.
-      * trainer.py: training D2G2.
+      * trainer.py: train D2G2.
       * evaluate.py: eveluate D2G2.
   
 ## Citation
-@inproceedings{zhang2021disentangled,
-  title={Disentangled Dynamic Graph Deep Generation},
-  author={Zhang, Wenbin and Zhang, Liming and Pfoser, Dieter and Zhao, Liang},
-  booktitle={Proceedings of the 2021 SIAM International Conference on Data Mining (SDM)},
-  pages={738--746},
-  year={2021},
-  organization={SIAM}
+@inproceedings{zhang2021disentangled,  
+     title={Disentangled Dynamic Graph Deep Generation},  
+     author={Zhang, Wenbin and Zhang, Liming and Pfoser, Dieter and Zhao, Liang},  
+     booktitle={Proceedings of the 2021 SIAM International Conference on Data Mining (SDM)},  
+     pages={738--746},  
+     year={2021},  
+     organization={SIAM}  
 }
-
