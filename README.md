@@ -1,19 +1,26 @@
 # D2G2
-This repository will maintain the implementation of D2G2 (SDM 21), a generic framework of deep generative models for interpretable dynamic graph generation. Detailded information about D2G2 is provided in [D2G2](https://github.com/vanbanTruong/vanbanTruong.github.io/blob/master/assets/SDM21.pdf). Stay tuned!  
+This repository maintains the implementation of D2G2 (SDM 21), a generic framework of deep generative models for interpretable dynamic graph generation. Detailded information about D2G2 is provided in [D2G2](https://github.com/vanbanTruong/vanbanTruong.github.io/blob/master/assets/SDM21.pdf). 
 
-<!--## Instructions
-1. Clone this repository.
-2. Download the datasets as described in the Experiment/Data folder of this repository to the root folder of the project.
-3. Run the code with Weka > 3.9.  
-      *In Experiment folder: InstanceStreamClassifier.java and WindowStreamClassifier.java evaluate the landmark window model       and sliding window model, respectively.  
-      *The FAHT folder contains the source code of the proposed FAHT.-->
+## Requirements
+* PyTorch 1.4 or higher
+* Python 3.7
+
+
+## Instructions
+1. Clone/download this repository.
+2. Add datasets consisting of adjacency matrix and feature matrix with time dimension to dataset folder   
+3. Run the code.  
+      *model.py: the D2G2 model.
+      *trainer.py: training D2G2.
+      *evaluate.py: eveluate D2G2.
   
-<!--## Citation
-@inproceedings{zhang2019faht,  
-     title={FAHT: an adaptive fairness-aware decision tree classifier},  
-     author={Zhang, Wenbin and Ntoutsi, Eirini},  
-     booktitle={Proceedings of the 28th International Joint Conference on Artificial Intelligence},  
-     pages={1480--1486},  
-     year={2019},  
-     organization={AAAI Press}  
-}-->
+## Citation
+@inproceedings{zhang2021disentangled,
+  title={Disentangled Dynamic Graph Deep Generation},
+  author={Zhang, Wenbin and Zhang, Liming and Pfoser, Dieter and Zhao, Liang},
+  booktitle={Proceedings of the 2021 SIAM International Conference on Data Mining (SDM)},
+  pages={738--746},
+  year={2021},
+  organization={SIAM}
+}
+
