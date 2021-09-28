@@ -8,7 +8,7 @@ This repository maintains the implementation of D2G2 (SDM 21), a generic framewo
 
 ## Instructions
 1. Clone/download this repository.
-2. Add datasets consisting of adjacency matrix and feature matrix with time dimension to dataset folder   
+2. Add datasets consisting of adjacency matrix and feature matrix with time dimension to dataset folder.   
 3. Run the code.  
       * model.py: the D2G2 model.
       * trainer.py: training D2G2.
