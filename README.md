@@ -12,7 +12,6 @@ This repository maintains the implementation of D2G2 (SDM 21), a generic framewo
 3. Run the code.  
       * model.py: the D2G2 model.
       * trainer.py: train D2G2.
-      * evaluate.py: eveluate D2G2.
   
 ## Reference
 @inproceedings{zhang2021disentangled,  
