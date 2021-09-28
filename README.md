@@ -14,7 +14,7 @@ This repository maintains the implementation of D2G2 (SDM 21), a generic framewo
       * trainer.py: train D2G2.
       * evaluate.py: eveluate D2G2.
   
-## Citation
+## Reference
 @inproceedings{zhang2021disentangled,  
      title={Disentangled Dynamic Graph Deep Generation},  
      author={Zhang, Wenbin and Zhang, Liming and Pfoser, Dieter and Zhao, Liang},  
