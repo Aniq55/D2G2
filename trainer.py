@@ -5,6 +5,7 @@ torch.manual_seed(0)
 import torch.utils.data
 import torch.optim as optim
 import torch.nn.functional as F
+import numpy as np
 
 from torch.autograd import Variable
 from model import *
@@ -47,8 +48,7 @@ class GrfSim(nn.Module):
             for i in range(self.max_num_nodes):
                 for a in range(self.max_num_nodes):
                     x_new[i, a] = x[i, a] * S[i, i, a, a]
-                    pooled = [torch.max(x[j, :] * S[i, j, a, :])
-                              for j in range(self.max_num_nodes) if j != i]
+                    pooled = [torch.max(x[j, :] * S[i, j, a, :]) for j in range(self.max_num_nodes) if j != i]
                     neigh_sim = sum(pooled)
                     x_new[i, a] += neigh_sim
             norm = torch.norm(x_new)
@@ -60,7 +60,7 @@ class GrfSim(nn.Module):
 
     def permute_adj(self, adj, curr_ind, target_ind):
         ''' Permute adjacency matrix.
-          The target_ind (connectivity) should be permuted to the curr_ind position.
+        The target_ind (connectivity) should be permuted to the curr_ind position.
         '''
         # order curr_ind according to target ind
         ind = np.zeros(self.max_num_nodes, dtype=np.int)
@@ -130,13 +130,14 @@ def metrics(original_full_adj, recon_adj):
 
 
 def loss_fn(original_adj, recon_adj, original_feature, recon_feature, f_mean, f_logvar, z_post_mean_edge, z_post_logvar_edge,
-                                             z_post_mean_node, z_post_logvar_node, z_post_mean_edge_node, z_post_logvar_edge_node,
-                                             z_prior_mean_edge, z_prior_logvar_edge, z_prior_mean_node, z_prior_logvar_node,
-                                             z_prior_mean_edge_node, z_prior_logvar_edge_node, original_full_adj, max_num_nodes, device):
+                z_post_mean_node, z_post_logvar_node, z_post_mean_edge_node, z_post_logvar_edge_node,
+                z_prior_mean_edge, z_prior_logvar_edge, z_prior_mean_node, z_prior_logvar_node,
+                z_prior_mean_edge_node, z_prior_logvar_edge_node, original_full_adj, max_num_nodes, device):
     """
-    Loss function: 1. The MSE loss between the generated and the original graphs
-                   2. The KL divergence of f,
-                   3. The sum over the KL divergence of each z_t, with the sum divided by batch_size
+    Loss function: 
+    1. The MSE loss between the generated and the original graphs
+    2. The KL divergence of f,
+    3. The sum over the KL divergence of each z_t, with the sum divided by batch_size
 
     Loss = {mse + KL of f + sum(KL of z_t)} / batch_size
     Prior of f is a spherical zero mean unit variance Gaussian and the prior of each z_t is a Gaussian whose mean and variance
@@ -186,14 +187,14 @@ def loss_fn(original_adj, recon_adj, original_feature, recon_feature, f_mean, f_
 
 
     return ((grf_disim + mse_feature) + kld_f + kld_z_edge + kld_z_node+ kld_z_edge_node) / batch_size, \
-           grf_disim/batch_size, mse_feature/batch_size,\
-           kld_f / batch_size, (kld_z_edge + kld_z_node+ kld_z_edge_node) / batch_size,\
-           Bursty_Coeff/ batch_size, Temporal_Efficiency/ batch_size, Degree_Centrality/ batch_size, original_edge_num, recon_edge_num
+        grf_disim/batch_size, mse_feature/batch_size,\
+        kld_f / batch_size, (kld_z_edge + kld_z_node+ kld_z_edge_node) / batch_size,\
+        Bursty_Coeff/ batch_size, Temporal_Efficiency/ batch_size, Degree_Centrality/ batch_size, original_edge_num, recon_edge_num
 
 class Trainer(object):
     def __init__(self, model, trainloader, test_f_expand, max_num_nodes, genr_batch_size, original_full_adj,
-                 epochs=3, learning_rate=0.001, nsamples=1, recon_path='./recon/',
-                 checkpoints='./output/model.pth', device=torch.device('cuda:0')):
+                epochs=3, learning_rate=0.001, nsamples=1, recon_path='./recon/',
+                checkpoints='./output/model.pth', device=torch.device('cuda:0')):
         self.trainloader = trainloader
         self.start_epoch = 0
         self.epochs = epochs
@@ -216,11 +217,11 @@ class Trainer(object):
 
     def save_checkpoint(self, epoch):
         torch.save({
-            'epoch': epoch + 1,
-            'state_dict': self.model.state_dict(),
-            'optimizer': self.optimizer.state_dict(),
-            'losses': self.epoch_losses},
-            self.checkpoints)
+        'epoch': epoch + 1,
+        'state_dict': self.model.state_dict(),
+        'optimizer': self.optimizer.state_dict(),
+        'losses': self.epoch_losses},
+        self.checkpoints)
 
     def load_checkpoint(self):
         try:
@@ -309,10 +310,9 @@ class Trainer(object):
 
             self.epoch_losses.append(meanloss)
             print("Epoch {} : Average Loss: {} Edge Loss {} Node Loss {} KL of f : {} KL of z : {} "
-                  "Bursty_Coeff: {} Temporal_Efficiency: {} Degree_Centrality {} original_edges_total {} recon_edges_total {}".
-                  format(epoch + 1, meanloss, meangrf_loss,  meannode_losses, meanf, meanz, meanBursty_Coeffs, meanTemporal_Efficiencies, meanDegree_Centralities,
-                         original_edges_total, recon_edges_total
-                         ))
+                "Bursty_Coeff: {} Temporal_Efficiency: {} Degree_Centrality {} original_edges_total {} recon_edges_total {}".
+                format(epoch + 1, meanloss, meangrf_loss,  meannode_losses, meanf, meanz, meanBursty_Coeffs, meanTemporal_Efficiencies, meanDegree_Centralities,
+                        original_edges_total, recon_edges_total))
             self.save_checkpoint(epoch)
             self.model.eval()
             if epoch== self.epochs-1:
@@ -347,7 +347,7 @@ if __name__ == '__main__':
     device = torch.device('cpu')
 
     d2g2 = D2G2(f_dim=f_dim, z_dim=32, batch_size= batch_size, seq_len= seq_len, factorised=True, device=device,
-                          graphs= seq_len,feature_dim= feature_dim, max_num_nodes= max_num_nodes)
+                        graphs= seq_len,feature_dim= feature_dim, max_num_nodes= max_num_nodes)
 
     fix_f= True
     if not fix_f:
@@ -362,7 +362,7 @@ if __name__ == '__main__':
 
 
     trainer = Trainer(d2g2, loader, test_f, epochs=100, learning_rate=0.0002,
-                      device=device, max_num_nodes= max_num_nodes, genr_batch_size= genr_batch_size, original_full_adj=adj)
+                    device=device, max_num_nodes= max_num_nodes, genr_batch_size= genr_batch_size, original_full_adj=adj)
 
     trainer.load_checkpoint()
     
